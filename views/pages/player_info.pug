@@ -1,0 +1,54 @@
+//- player-info.pug
+include ../partials/header.pug
+include ../partials/menu.pug
+
+div.container
+  br
+  div.row
+    div.col-4
+      div.card
+        //- TODO: Modify the pug code below to conditionally set the image_src
+        - let image_src = '../../resources/img/helmet.jpg'
+
+
+        -if(stats)
+          for item_stats in stats
+            img.card-img-top#player_img(src='../'+item_stats.img_src, alt="Football Player")
+        -else
+          img.card-img-top#player_img(src= image_src, alt="Football Player")
+        div.card-body.mx-auto
+          form.form(action="/player_info/select_player", method="get")
+            select.custom-select(name="player_choice", onchange="this.form.submit()")
+              //- TODO: Populate the select with player options. Set the value to the player's id and display the player's name.
+              -if(names)
+                for item_n in names
+                  option(value=item_n.id)=item_n.name
+    div.col-8
+      //- TODO: Set the player's information. On select, fill in the player's information in each of the field below. You will need to calculate the average rushing, receiving, and passing yards.
+      -if(games)
+        for item_games in games
+          -var games_played =item_games.count
+            div.table-responsive
+              table.table
+                -if(stats)
+                  for itemStat in stats
+                    tr
+                      th Year
+                      td= itemStat.year
+                    tr
+                      th Major
+                      td= itemStat.major
+                    tr
+                      th Games Played
+                      td= games_played
+                    tr
+                      td='Passing Yards: ' + itemStat.passing_yards
+                      td='Avg. Passing Yards: ' + (itemStat.passing_yards/games_played).toFixed(2)
+                    tr
+                      td= 'Rushing Yards: '+itemStat.rushing_yards
+                      td= 'Avg. Rushing Yards: '+ (itemStat.rushing_yards/games_played).toFixed(2)
+                    tr
+                      td= 'Receiving Yards: '+itemStat.receiving_yards
+                      td= 'Avg. Receiving Yards: '+ (itemStat.receiving_yards/games_played).toFixed(2)
+
+include ../partials/footer.pug
